@@ -1,0 +1,24 @@
+total 444
+drwxr-xr-x 6 root root  4096 Sep 27 13:07 .
+drwxr-xr-x 1 root root   137 Sep 27 12:31 ..
+-rw-r--r-- 1 root root  8774 Sep 27 13:09 IMPLEMENTATION_SUMMARY.md
+-rw-r--r-- 1 root root  1067 Sep 27 13:03 LICENSE
+-rw-r--r-- 1 root root  6514 Sep 27 13:03 README.md
+-rw-r--r-- 1 root root 29089 Sep 27 12:35 ai_image_recognition_implementation.md
+drwxr-xr-x 3 root root    49 Sep 27 12:55 app
+-rw-r--r-- 1 root root   519 Sep 27 13:00 build.gradle
+-rw-r--r-- 1 root root 61253 Sep 27 12:42 custom_spread_creation.md
+-rw-r--r-- 1 root root  6734 Sep 27 12:33 database_schema.md
+-rw-r--r-- 1 root root 63054 Sep 27 12:38 digital_reading_experience.md
+drwxr-xr-x 3 root root    29 Sep 27 13:00 gradle
+-rw-r--r-- 1 root root   167 Sep 27 12:55 gradle.properties
+drwxr-xr-x 2 root root  4096 Sep 27 13:14 outputs
+-rw-r--r-- 1 root root  3782 Sep 27 12:32 project_architecture.md
+-rw-r--r-- 1 root root  9689 Sep 27 12:51 project_implementation_plan.md
+-rw-r--r-- 1 root root  9114 Sep 27 12:51 project_summary.md
+-rw-r--r-- 1 root root 83560 Sep 27 12:46 reading_history_diary.md
+-rw-r--r-- 1 root root   329 Sep 27 12:55 settings.gradle
+drwxr-xr-x 2 root root 24576 Sep 27 13:14 summarized_conversations
+-rw-r--r-- 1 root root 67325 Sep 27 12:50 tarot_card_dictionary.md
+-rw-r--r-- 1 root root  1851 Sep 27 13:09 todo.md
+-rw-r--r-- 1 root root 22972 Sep 27 12:33 ui_wireframes.md
