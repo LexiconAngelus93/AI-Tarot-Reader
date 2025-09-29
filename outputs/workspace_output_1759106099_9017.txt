@@ -1,0 +1,3 @@
+181:            Button(onClick = { navController.navigate(Screen.Home.route) }) {
+182:                Icon(Icons.Default.Home, contentDescription = "Home")
+183:                Text("Home")

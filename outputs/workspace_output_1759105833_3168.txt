@@ -165,26 +165,3 @@ fun FeatureCard(
         }
     }
 }
-        item {
-            FeatureCard(
-                icon = Icons.Default.CalendarToday,
-                title = &quot;Daily Card Draw&quot;,
-                description = &quot;Draw a card each day for guidance and reflection&quot;,
-                onClick = { navController.navigate(Screen.DailyDraw.route) },
-                modifier = Modifier.padding(bottom = 16.dp),
-                accessibleColors = accessibleColors,
-                accessibleTextSizes = accessibleTextSizes
-            )
-        }
-
-        item {
-            FeatureCard(
-                icon = Icons.Default.Settings,
-                title = &quot;Settings&quot;,
-                description = &quot;Customize your Tarot reading experience&quot;,
-                onClick = { navController.navigate(Screen.Settings.route) },
-                modifier = Modifier.padding(bottom = 16.dp),
-                accessibleColors = accessibleColors,
-                accessibleTextSizes = accessibleTextSizes
-            )
-        }

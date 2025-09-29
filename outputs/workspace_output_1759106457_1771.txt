@@ -1,0 +1,88 @@
+On branch clean-development
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   app/src/main/java/com/tarotreader/data/database/TarotDao.kt
+	modified:   app/src/main/java/com/tarotreader/data/database/TarotDatabase.kt
+	modified:   app/src/main/java/com/tarotreader/di/RepositoryModule.kt
+	modified:   app/src/main/java/com/tarotreader/di/UseCaseModule.kt
+	modified:   app/src/main/java/com/tarotreader/di/ViewModelModule.kt
+	modified:   app/src/main/java/com/tarotreader/presentation/navigation/AppNavigation.kt
+	modified:   app/src/main/java/com/tarotreader/presentation/navigation/Screen.kt
+	modified:   app/src/main/java/com/tarotreader/presentation/screen/HomeScreen.kt
+	modified:   app/src/main/java/com/tarotreader/presentation/screen/ReadingResultScreen.kt
+	modified:   app/src/main/java/com/tarotreader/presentation/viewmodel/TarotViewModel.kt
+	modified:   todo.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	app/src/main/java/com/tarotreader/data/database/DailyDrawEntity.kt
+	app/src/main/java/com/tarotreader/data/database/DailyDrawMapper.kt
+	app/src/main/java/com/tarotreader/data/database/UserPreferencesEntity.kt
+	app/src/main/java/com/tarotreader/data/database/UserPreferencesMapper.kt
+	app/src/main/java/com/tarotreader/data/model/DailyDraw.kt
+	app/src/main/java/com/tarotreader/data/model/UserPreferences.kt
+	app/src/main/java/com/tarotreader/data/repository/DailyDrawRepositoryImpl.kt
+	app/src/main/java/com/tarotreader/data/repository/UserPreferencesRepositoryImpl.kt
+	app/src/main/java/com/tarotreader/di/DailyDrawRepositoryModule.kt
+	app/src/main/java/com/tarotreader/domain/model/DailyDraw.kt
+	app/src/main/java/com/tarotreader/domain/model/UserPreferences.kt
+	app/src/main/java/com/tarotreader/domain/repository/DailyDrawRepository.kt
+	app/src/main/java/com/tarotreader/domain/repository/UserPreferencesRepository.kt
+	app/src/main/java/com/tarotreader/domain/usecase/GetDailyDrawUseCase.kt
+	app/src/main/java/com/tarotreader/domain/usecase/GetRecentDailyDrawsUseCase.kt
+	app/src/main/java/com/tarotreader/domain/usecase/GetUserPreferencesUseCase.kt
+	app/src/main/java/com/tarotreader/domain/usecase/SaveDailyDrawUseCase.kt
+	app/src/main/java/com/tarotreader/domain/usecase/SaveUserPreferencesUseCase.kt
+	app/src/main/java/com/tarotreader/domain/usecase/UpdateUserPreferencesUseCase.kt
+	app/src/main/java/com/tarotreader/presentation/screen/DailyDrawScreen.kt
+	app/src/main/java/com/tarotreader/presentation/screen/SettingsScreen.kt
+	app/src/main/java/com/tarotreader/utils/SharingHelper.kt
+	app/src/test/
+	outputs/workspace_output_1759105617_9545.txt
+	outputs/workspace_output_1759105621_7175.txt
+	outputs/workspace_output_1759105631_1699.txt
+	outputs/workspace_output_1759105633_3851.txt
+	outputs/workspace_output_1759105636_8901.txt
+	outputs/workspace_output_1759105654_7033.txt
+	outputs/workspace_output_1759105663_4254.txt
+	outputs/workspace_output_1759105667_6959.txt
+	outputs/workspace_output_1759105678_1552.txt
+	outputs/workspace_output_1759105696_3360.txt
+	outputs/workspace_output_1759105722_1166.txt
+	outputs/workspace_output_1759105733_1697.txt
+	outputs/workspace_output_1759105746_8054.txt
+	outputs/workspace_output_1759105763_2299.txt
+	outputs/workspace_output_1759105795_8085.txt
+	outputs/workspace_output_1759105805_3407.txt
+	outputs/workspace_output_1759105818_4988.txt
+	outputs/workspace_output_1759105825_2982.txt
+	outputs/workspace_output_1759105833_3168.txt
+	outputs/workspace_output_1759105839_3948.txt
+	outputs/workspace_output_1759105847_1694.txt
+	outputs/workspace_output_1759105851_5890.txt
+	outputs/workspace_output_1759105854_6376.txt
+	outputs/workspace_output_1759105857_3721.txt
+	outputs/workspace_output_1759105868_7310.txt
+	outputs/workspace_output_1759105887_6423.txt
+	outputs/workspace_output_1759105931_4838.txt
+	outputs/workspace_output_1759105938_9096.txt
+	outputs/workspace_output_1759105982_2.txt
+	outputs/workspace_output_1759106031_2482.txt
+	outputs/workspace_output_1759106034_1789.txt
+	outputs/workspace_output_1759106038_8593.txt
+	outputs/workspace_output_1759106041_3843.txt
+	outputs/workspace_output_1759106078_3750.txt
+	outputs/workspace_output_1759106090_4157.txt
+	outputs/workspace_output_1759106099_9017.txt
+	outputs/workspace_output_1759106107_4335.txt
+	outputs/workspace_output_1759106117_1257.txt
+	outputs/workspace_output_1759106120_5759.txt
+	outputs/workspace_output_1759106134_1659.txt
+	outputs/workspace_output_1759106139_7321.txt
+	outputs/workspace_output_1759106142_2991.txt
+	outputs/workspace_output_1759106149_7889.txt
+	outputs/workspace_output_1759106156_9348.txt
+	outputs/workspace_output_1759106457_1771.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

@@ -1,0 +1,6 @@
+total 12
+drwxr-xr-x 2 root root  77 Sep 27 12:55 .
+drwxr-xr-x 3 root root  28 Sep 27 12:55 ..
+-rw-r--r-- 1 root root 339 Sep 27 12:55 colors.xml
+-rw-r--r-- 1 root root  73 Sep 27 12:55 strings.xml
+-rw-r--r-- 1 root root 240 Sep 27 12:55 themes.xml

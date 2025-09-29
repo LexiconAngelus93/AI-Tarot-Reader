@@ -3,6 +3,10 @@ package com.tarotreader.di
 import com.tarotreader.domain.usecase.*
 import com.tarotreader.presentation.viewmodel.TarotViewModel
 
+import com.tarotreader.domain.usecase.GetDailyDrawUseCase
+import com.tarotreader.domain.usecase.GetRecentDailyDrawsUseCase
+import com.tarotreader.domain.usecase.SaveDailyDrawUseCase
+
 object ViewModelModule {
     fun provideTarotViewModel(
         getAllDecksUseCase: GetAllDecksUseCase,
@@ -17,10 +21,7 @@ object ViewModelModule {
         calculateEigenvalueUseCase: CalculateEigenvalueUseCase,
         getDailyDrawUseCase: GetDailyDrawUseCase,
         getRecentDailyDrawsUseCase: GetRecentDailyDrawsUseCase,
-        saveDailyDrawUseCase: SaveDailyDrawUseCase,
-        getUserPreferencesUseCase: GetUserPreferencesUseCase,
-        saveUserPreferencesUseCase: SaveUserPreferencesUseCase,
-        updateUserPreferencesUseCase: UpdateUserPreferencesUseCase
+        saveDailyDrawUseCase: SaveDailyDrawUseCase
     ): TarotViewModel {
         return TarotViewModel(
             getAllDecksUseCase,
@@ -35,10 +36,7 @@ object ViewModelModule {
             calculateEigenvalueUseCase,
             getDailyDrawUseCase,
             getRecentDailyDrawsUseCase,
-            saveDailyDrawUseCase,
-            getUserPreferencesUseCase,
-            saveUserPreferencesUseCase,
-            updateUserPreferencesUseCase
+            saveDailyDrawUseCase
         )
     }
 }

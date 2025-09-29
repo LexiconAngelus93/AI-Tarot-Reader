@@ -1,0 +1,16 @@
+                description = "Explore card meanings, symbolism, and deepen your understanding",
+                onClick = { navController.navigate(Screen.TarotDictionary.route) },
+                accessibleColors = accessibleColors,
+                accessibleTextSizes = accessibleTextSizes
+            )
+        }
+        
+        item {
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
+
+@Composable
+fun FeatureCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,

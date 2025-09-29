@@ -142,10 +142,3 @@ fun AppNavigation() {
         }
     }
 }
-        composable(Screen.DailyDraw.route) {
-            DailyDrawScreen(onBack = { navController.popBackStack() }, viewModel = viewModel)
-        }
-
-        composable(Screen.Settings.route) {
-            SettingsScreen(navController)
-        }

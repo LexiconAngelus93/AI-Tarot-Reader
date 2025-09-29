@@ -1,0 +1,10 @@
+        }
+        
+        composable(Screen.Camera.route) {
+            CameraScreen(navController)
+        }
+    }
+}
+        composable(Screen.DailyDraw.route) {
+            DailyDrawScreen(onBack = { navController.popBackStack() }, viewModel = viewModel)
+        }

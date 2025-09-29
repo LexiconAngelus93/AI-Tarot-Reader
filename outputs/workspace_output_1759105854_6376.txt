@@ -1,0 +1,16 @@
+                modifier = Modifier.padding(bottom = 16.dp),
+                accessibleColors = accessibleColors,
+                accessibleTextSizes = accessibleTextSizes
+            )
+        }
+        
+        item {
+            FeatureCard(
+                icon = Icons.Default.Book,
+                title = "Tarot Dictionary",
+                description = "Explore card meanings, symbolism, and deepen your understanding",
+                onClick = { navController.navigate(Screen.TarotDictionary.route) },
+                accessibleColors = accessibleColors,
+                accessibleTextSizes = accessibleTextSizes
+            )
+        }

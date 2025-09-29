@@ -14,13 +14,7 @@ object ViewModelModule {
         saveReadingUseCase: SaveReadingUseCase,
         analyzeSpreadFromImageUseCase: AnalyzeSpreadFromImageUseCase,
         generateReadingUseCase: GenerateReadingUseCase,
-        calculateEigenvalueUseCase: CalculateEigenvalueUseCase,
-        getDailyDrawUseCase: GetDailyDrawUseCase,
-        getRecentDailyDrawsUseCase: GetRecentDailyDrawsUseCase,
-        saveDailyDrawUseCase: SaveDailyDrawUseCase,
-        getUserPreferencesUseCase: GetUserPreferencesUseCase,
-        saveUserPreferencesUseCase: SaveUserPreferencesUseCase,
-        updateUserPreferencesUseCase: UpdateUserPreferencesUseCase
+        calculateEigenvalueUseCase: CalculateEigenvalueUseCase
     ): TarotViewModel {
         return TarotViewModel(
             getAllDecksUseCase,
@@ -32,13 +26,7 @@ object ViewModelModule {
             saveReadingUseCase,
             analyzeSpreadFromImageUseCase,
             generateReadingUseCase,
-            calculateEigenvalueUseCase,
-            getDailyDrawUseCase,
-            getRecentDailyDrawsUseCase,
-            saveDailyDrawUseCase,
-            getUserPreferencesUseCase,
-            saveUserPreferencesUseCase,
-            updateUserPreferencesUseCase
+            calculateEigenvalueUseCase
         )
     }
 }

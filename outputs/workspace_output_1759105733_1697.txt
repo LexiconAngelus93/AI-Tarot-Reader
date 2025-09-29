@@ -3,9 +3,6 @@ package com.tarotreader.di
 import com.tarotreader.domain.repository.TarotRepository
 import com.tarotreader.domain.usecase.*
 
-import com.tarotreader.domain.repository.DailyDrawRepository
-import com.tarotreader.domain.repository.UserPreferencesRepository
-
 object UseCaseModule {
     fun provideGetAllDecksUseCase(repository: TarotRepository): GetAllDecksUseCase {
         return GetAllDecksUseCase(repository)
@@ -53,31 +50,5 @@ object UseCaseModule {
     
     fun provideCalculateEigenvalueUseCase(): CalculateEigenvalueUseCase {
         return CalculateEigenvalueUseCase()
-    }
-    
-    // Daily Draw Use Cases
-    fun provideGetDailyDrawUseCase(repository: DailyDrawRepository): GetDailyDrawUseCase {
-        return GetDailyDrawUseCase(repository)
-    }
-    
-    fun provideGetRecentDailyDrawsUseCase(repository: DailyDrawRepository): GetRecentDailyDrawsUseCase {
-        return GetRecentDailyDrawsUseCase(repository)
-    }
-    
-    fun provideSaveDailyDrawUseCase(repository: DailyDrawRepository): SaveDailyDrawUseCase {
-        return SaveDailyDrawUseCase(repository)
-    }
-    
-    // User Preferences Use Cases
-    fun provideGetUserPreferencesUseCase(repository: UserPreferencesRepository): GetUserPreferencesUseCase {
-        return GetUserPreferencesUseCase(repository)
-    }
-    
-    fun provideSaveUserPreferencesUseCase(repository: UserPreferencesRepository): SaveUserPreferencesUseCase {
-        return SaveUserPreferencesUseCase(repository)
-    }
-    
-    fun provideUpdateUserPreferencesUseCase(repository: UserPreferencesRepository): UpdateUserPreferencesUseCase {
-        return UpdateUserPreferencesUseCase(repository)
     }
 }

@@ -1,0 +1,12 @@
+        TopAppBar(
+            title = { Text("Daily Card Draw") },
+            navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                }
+            },
+            actions = {
+                IconButton(onClick = { 
+                    if (decks.isNotEmpty()) {
+                        viewModel.generateDailyDraw(decks.first().id)
+                    }

@@ -1,0 +1,21 @@
+                accessibleTextSizes = accessibleTextSizes
+            )
+        }
+        
+        item {
+            FeatureCard(
+                icon = Icons.Default.History,
+                title = "Reading Diary & History",
+                description = "Browse past readings, search by date or deck, and reflect on your Tarot journey",
+                onClick = { navController.navigate(Screen.ReadingHistory.route) },
+                modifier = Modifier.padding(bottom = 16.dp),
+                accessibleColors = accessibleColors,
+                accessibleTextSizes = accessibleTextSizes
+            )
+        }
+        
+        item {
+            FeatureCard(
+                icon = Icons.Default.Book,
+                title = "Tarot Dictionary",
+                description = "Explore card meanings, symbolism, and deepen your understanding",

@@ -1,0 +1,20 @@
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = androidx.compose.ui.unit.sp(accessibleTextSizes.medium)
+                    ),
+                    color = accessibleColors.onSurface.copy(alpha = 0.7f)
+                )
+            }
+        }
+    }
+}
+        item {
+            FeatureCard(
+                icon = Icons.Default.CalendarToday,
+                title = &quot;Daily Card Draw&quot;,
+                description = &quot;Draw a card each day for guidance and reflection&quot;,
+                onClick = { navController.navigate(Screen.DailyDraw.route) },
+                modifier = Modifier.padding(bottom = 16.dp),
+                accessibleColors = accessibleColors,
+                accessibleTextSizes = accessibleTextSizes
+            )
+        }

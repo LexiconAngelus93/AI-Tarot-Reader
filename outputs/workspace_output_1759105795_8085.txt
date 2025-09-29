@@ -12,6 +12,4 @@ sealed class Screen(val route: String) {
     object LearningModule : Screen("learning_module")
     object SpreadCreator : Screen("spread_creator")
     object Camera : Screen("camera")
-    object DailyDraw : Screen("daily_draw")
-    object Settings : Screen("settings")
 }

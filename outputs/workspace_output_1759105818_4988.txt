@@ -1,0 +1,20 @@
+        }
+        
+        composable("${Screen.CardDetail.route}/{cardId}") { backStackEntry ->
+            val cardId = backStackEntry.arguments?.getString("cardId") ?: ""
+            CardDetailScreen(navController, cardId)
+        }
+        
+        composable(Screen.LearningModule.route) {
+            LearningModuleScreen(navController)
+        }
+        
+        composable(Screen.SpreadCreator.route) {
+            SpreadCreatorScreen(navController)
+        }
+        
+        composable(Screen.Camera.route) {
+            CameraScreen(navController)
+        }
+    }
+}

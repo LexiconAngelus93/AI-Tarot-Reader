@@ -1,6 +1,5 @@
 package com.tarotreader.presentation.screen
 
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,13 +9,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tarotreader.presentation.viewmodel.TarotViewModel
 import androidx.compose.animation.*
-import com.tarotreader.utils.SharingHelper
 
 @Composable
 fun ReadingResultScreen(navController: NavController, viewModel: TarotViewModel) {
@@ -185,19 +182,3 @@ fun ReadingResultScreen(navController: NavController, viewModel: TarotViewModel)
         }
     }
 }
-        if (reading != null) {
-            Button(onClick = { shareReading(context, reading!!) }) {
-                Icon(Icons.Default.Share, contentDescription = &quot;Share Reading&quot;)
-                Text(&quot;Share&quot;)
-            }
-        }
-        
-        Button(onClick = { navController.navigate(Screen.Home.route) }) {
-            Icon(Icons.Default.Home, contentDescription = &quot;Home&quot;)
-            Text(&quot;Home&quot;)
-        }
-
-private fun shareReading(context: Context, reading: com.tarotreader.domain.model.Reading) {
-    SharingHelper.shareReading(context, reading)
-}
-

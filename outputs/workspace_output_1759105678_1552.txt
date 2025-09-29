@@ -12,9 +12,7 @@ import com.tarotreader.data.model.*
         TarotSpreadEntity::class,
         SpreadPositionEntity::class,
         ReadingEntity::class,
-        CardDrawingEntity::class,
-        DailyDrawEntity::class,
-        UserPreferencesEntity::class
+        CardDrawingEntity::class
     ],
     version = 1,
     exportSchema = false

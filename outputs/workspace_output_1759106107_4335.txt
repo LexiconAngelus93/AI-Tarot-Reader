@@ -1,0 +1,11 @@
+                } else {
+                    Icon(Icons.Default.Save, contentDescription = "Save Reading")
+                    Text("Save Reading")
+                }
+            }
+            
+            Button(onClick = { navController.navigate(Screen.Home.route) }) {
+                Icon(Icons.Default.Home, contentDescription = "Home")
+                Text("Home")
+            }
+        }

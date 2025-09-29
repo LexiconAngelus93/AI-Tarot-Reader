@@ -112,30 +112,3 @@ interface TarotDao {
     @Delete
     suspend fun deleteCardDrawings(cardDrawings: List<CardDrawingEntity>)
 }
-    
-    // Daily Draw operations
-    @Query(&quot;SELECT * FROM daily_draws WHERE date = :date&quot;)
-    suspend fun getDailyDrawByDate(date: String): DailyDrawEntity?
-    
-    @Query(&quot;SELECT * FROM daily_draws ORDER BY date DESC LIMIT 30&quot;)
-    fun getRecentDailyDraws(): Flow<List<DailyDrawEntity>>
-    
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDailyDraw(dailyDraw: DailyDrawEntity)
-    
-    @Update
-    suspend fun updateDailyDraw(dailyDraw: DailyDrawEntity)
-    
-    @Delete
-    suspend fun deleteDailyDraw(dailyDraw: DailyDrawEntity)
-
-    
-    // User Preferences operations
-    @Query(&quot;SELECT * FROM user_preferences WHERE id = :id&quot;)
-    suspend fun getUserPreferences(id: Int): UserPreferencesEntity?
-    
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUserPreferences(preferences: UserPreferencesEntity)
-    
-    @Update
-    suspend fun updateUserPreferences(preferences: UserPreferencesEntity)

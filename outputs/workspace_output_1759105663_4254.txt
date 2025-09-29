@@ -1,0 +1,10 @@
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCardDrawing(cardDrawing: CardDrawingEntity)
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCardDrawings(cardDrawings: List<CardDrawingEntity>)
+    
+    @Delete
+    suspend fun deleteCardDrawings(cardDrawings: List<CardDrawingEntity>)
+}

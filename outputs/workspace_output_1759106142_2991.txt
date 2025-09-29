@@ -1,0 +1,11 @@
+                    }
+                }) {
+                    Icon(Icons.Filled.Refresh, contentDescription = "New Draw")
+                }
+            }
+        )
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Date display
+        Text(
