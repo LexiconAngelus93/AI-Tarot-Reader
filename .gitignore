@@ -72,3 +72,6 @@ Desktop.ini
 
 # Summarized conversations
 summarized_conversations/
+
+# Output files
+outputs/
