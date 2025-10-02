@@ -40,6 +40,30 @@ fun DeckSelectionScreen(navController: NavController) {
             coverImageUrl = "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=300&h=400&fit=crop",
             cardBackImageUrl = "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=200&h=300&fit=crop",
             numberOfCards = 78
+        ),
+        TarotDeckItem(
+            id = "wild_unknown_tarot",
+            name = "The Wild Unknown Tarot Deck",
+            description = "Created by Kim Krans, this stunning deck features hand-drawn artwork with animals and nature imagery. Known for its intuitive symbolism and modern aesthetic, perfect for connecting with the natural world and inner wisdom.",
+            coverImageUrl = "https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=300&h=400&fit=crop",
+            cardBackImageUrl = "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=200&h=300&fit=crop",
+            numberOfCards = 78
+        ),
+        TarotDeckItem(
+            id = "wild_unknown_alchemy",
+            name = "The Wild Unknown Alchemy Deck",
+            description = "Kim Krans' exploration of transformation and spiritual growth. This 78-card deck delves into the mystical process of alchemy, featuring evocative imagery that guides you through personal transformation and self-discovery.",
+            coverImageUrl = "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=300&h=400&fit=crop",
+            cardBackImageUrl = "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=200&h=300&fit=crop",
+            numberOfCards = 78
+        ),
+        TarotDeckItem(
+            id = "wild_unknown_archetypes",
+            name = "The Wild Unknown Archetypes Deck",
+            description = "Kim Krans' archetypal oracle deck featuring 78 cards that explore universal patterns and symbols. This deck helps you understand the archetypal forces at play in your life, offering profound insights into the human experience.",
+            coverImageUrl = "https://images.unsplash.com/photo-1509043759401-136742328bb3?w=300&h=400&fit=crop",
+            cardBackImageUrl = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200&h=300&fit=crop",
+            numberOfCards = 78
         )
     )
     

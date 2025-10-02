@@ -32,6 +32,18 @@ class DatabaseInitializer(private val tarotDao: TarotDao) {
         val minorArcanaCards = MinorArcanaProvider.getSuitsCards("rider_waite")
         tarotDao.insertCards(minorArcanaCards.map { it.toTarotCardEntity() })
         
+        // Insert The Wild Unknown Tarot Deck
+        val wildUnknownTarotDeck = TarotDataProvider.getWildUnknownTarotDeck().toTarotDeckEntity()
+        tarotDao.insertDeck(wildUnknownTarotDeck)
+        
+        // Insert The Wild Unknown Alchemy Deck
+        val wildUnknownAlchemyDeck = TarotDataProvider.getWildUnknownAlchemyDeck().toTarotDeckEntity()
+        tarotDao.insertDeck(wildUnknownAlchemyDeck)
+        
+        // Insert The Wild Unknown Archetypes Deck
+        val wildUnknownArchetypesDeck = TarotDataProvider.getWildUnknownArchetypesDeck().toTarotDeckEntity()
+        tarotDao.insertDeck(wildUnknownArchetypesDeck)
+        
         // Insert popular spreads
         val celticCrossSpread = TarotDataProvider.getCelticCrossSpread().toTarotSpreadEntity()
         tarotDao.insertSpread(celticCrossSpread)
