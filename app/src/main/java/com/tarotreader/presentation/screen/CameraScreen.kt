@@ -24,6 +24,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.tarotreader.presentation.viewmodel.TarotViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -32,6 +36,7 @@ import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraScreen(
     navController: NavController,
@@ -41,19 +46,15 @@ fun CameraScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
     
-    var hasPermission by remember { mutableStateOf(false) }
+    // Use Accompanist permissions for proper permission handling
+    val cameraPermissionState = rememberPermissionState(
+        permission = Manifest.permission.CAMERA
+    )
+    
     var isProcessing by remember { mutableStateOf(false) }
     var cameraError by remember { mutableStateOf<String?>(null) }
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
     var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
-    
-    // Check for camera permission
-    LaunchedEffect(Unit) {
-        hasPermission = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-    }
     
     Column(
         modifier = Modifier
@@ -73,7 +74,7 @@ fun CameraScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
         
-        if (hasPermission) {
+        if (cameraPermissionState.status.isGranted) {
             // Real CameraX preview implementation
             Card(
                 modifier = Modifier
@@ -149,7 +150,12 @@ fun CameraScreen(
                         modifier = Modifier.padding(top = 16.dp)
                     )
                     Text(
-                        text = "Please grant camera permission to analyze your physical Tarot spreads",
+                        text = if (cameraPermissionState.status.shouldShowRationale) {
+                            "Camera permission is needed to analyze your physical Tarot spreads. " +
+                            "Please grant the permission in your device settings."
+                        } else {
+                            "Please grant camera permission to analyze your physical Tarot spreads"
+                        },
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 8.dp)
                     )
@@ -172,7 +178,7 @@ fun CameraScreen(
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            if (hasPermission) {
+            if (cameraPermissionState.status.isGranted) {
                 Button(
                     onClick = { 
                         scope.launch {
@@ -220,15 +226,19 @@ fun CameraScreen(
             } else {
                 Button(
                     onClick = { 
-                        // Request camera permission
-                        // Note: In a real app, you would use ActivityResultContracts
-                        // For this implementation, we'll simulate permission grant
-                        hasPermission = true
+                        // Request camera permission using Accompanist
+                        cameraPermissionState.launchPermissionRequest()
                     }
                 ) {
                     Icon(Icons.Default.Key, contentDescription = "Grant Permission")
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Grant Permission")
+                    Text(
+                        if (cameraPermissionState.status.shouldShowRationale) {
+                            "Open Settings"
+                        } else {
+                            "Grant Permission"
+                        }
+                    )
                 }
             }
             
