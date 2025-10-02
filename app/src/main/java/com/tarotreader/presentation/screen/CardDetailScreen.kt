@@ -192,7 +192,10 @@ fun CardDetailScreen(
                 FlowRow {
                     card.keywords.forEach { keyword ->
                         Chip(
-                            onClick = { /* TODO: Implement keyword filtering */ },
+                            onClick = { 
+                                // Navigate to dictionary with keyword filter
+                                navController.navigate("dictionary?keyword=${keyword}")
+                            },
                             label = { Text(keyword) },
                             modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
                         )
