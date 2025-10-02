@@ -12,5 +12,6 @@ data class TarotDeckEntity(
     val coverImageUrl: String,
     val cardBackImageUrl: String,
     val numberOfCards: Int,
-    val deckType: String // Stored as string representation of DeckType enum
+    val author: String?,
+    val publisher: String?
 )

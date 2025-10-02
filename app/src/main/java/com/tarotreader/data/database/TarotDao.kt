@@ -1,7 +1,6 @@
 package com.tarotreader.data.database
 
 import androidx.room.*
-import com.tarotreader.data.model.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,6 +15,9 @@ interface TarotDao {
     
     @Query("SELECT * FROM tarot_cards WHERE id = :cardId")
     suspend fun getCardById(cardId: String): TarotCardEntity?
+    
+    @Query("SELECT * FROM tarot_cards WHERE name LIKE '%' || :query || '%' OR uprightKeywords LIKE '%' || :query || '%'")
+    suspend fun searchCards(query: String): List<TarotCardEntity>
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCard(card: TarotCardEntity)
@@ -68,20 +70,23 @@ interface TarotDao {
     suspend fun deleteSpread(spread: TarotSpreadEntity)
     
     // Spread Position operations
-    @Query("SELECT * FROM spread_positions WHERE spreadId = :spreadId")
-    fun getPositionsBySpread(spreadId: String): Flow<List<SpreadPositionEntity>>
+    @Query("SELECT * FROM spread_positions WHERE spreadId = :spreadId ORDER BY positionOrder")
+    suspend fun getPositionsForSpread(spreadId: String): List<SpreadPositionEntity>
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPosition(position: SpreadPositionEntity)
+    suspend fun insertSpreadPosition(position: SpreadPositionEntity)
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPositions(positions: List<SpreadPositionEntity>)
+    suspend fun insertSpreadPositions(positions: List<SpreadPositionEntity>)
     
     @Update
-    suspend fun updatePosition(position: SpreadPositionEntity)
+    suspend fun updateSpreadPosition(position: SpreadPositionEntity)
     
     @Delete
-    suspend fun deletePosition(position: SpreadPositionEntity)
+    suspend fun deleteSpreadPosition(position: SpreadPositionEntity)
+    
+    @Query("DELETE FROM spread_positions WHERE spreadId = :spreadId")
+    suspend fun deletePositionsForSpread(spreadId: String)
     
     // Reading operations
     @Query("SELECT * FROM readings ORDER BY date DESC")
@@ -89,6 +94,15 @@ interface TarotDao {
     
     @Query("SELECT * FROM readings WHERE id = :readingId")
     suspend fun getReadingById(readingId: String): ReadingEntity?
+    
+    @Query("SELECT * FROM readings WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    suspend fun getReadingsByDateRange(startDate: Long, endDate: Long): List<ReadingEntity>
+    
+    @Query("SELECT * FROM readings WHERE deckId = :deckId ORDER BY date DESC")
+    suspend fun getReadingsByDeck(deckId: String): List<ReadingEntity>
+    
+    @Query("SELECT * FROM readings WHERE spreadId = :spreadId ORDER BY date DESC")
+    suspend fun getReadingsBySpread(spreadId: String): List<ReadingEntity>
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReading(reading: ReadingEntity)
@@ -101,7 +115,7 @@ interface TarotDao {
     
     // Card Drawing operations
     @Query("SELECT * FROM card_drawings WHERE readingId = :readingId")
-    fun getCardDrawingsByReading(readingId: String): Flow<List<CardDrawingEntity>>
+    suspend fun getCardDrawingsForReading(readingId: String): List<CardDrawingEntity>
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCardDrawing(cardDrawing: CardDrawingEntity)
@@ -110,5 +124,8 @@ interface TarotDao {
     suspend fun insertCardDrawings(cardDrawings: List<CardDrawingEntity>)
     
     @Delete
-    suspend fun deleteCardDrawings(cardDrawings: List<CardDrawingEntity>)
+    suspend fun deleteCardDrawing(cardDrawing: CardDrawingEntity)
+    
+    @Query("DELETE FROM card_drawings WHERE readingId = :readingId")
+    suspend fun deleteCardDrawingsForReading(readingId: String)
 }

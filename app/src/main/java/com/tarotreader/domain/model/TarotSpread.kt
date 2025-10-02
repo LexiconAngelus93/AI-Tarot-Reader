@@ -11,8 +11,7 @@ data class TarotSpread(
 
 data class SpreadPosition(
     val id: String,
-    val spreadId: String,
-    val positionIndex: Int,
+    val positionOrder: Int,
     val name: String,
     val meaning: String,
     val x: Float,

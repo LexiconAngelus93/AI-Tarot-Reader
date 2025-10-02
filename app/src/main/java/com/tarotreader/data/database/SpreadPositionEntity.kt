@@ -8,7 +8,7 @@ data class SpreadPositionEntity(
     @PrimaryKey
     val id: String,
     val spreadId: String,
-    val positionIndex: Int,
+    val positionOrder: Int,
     val name: String,
     val meaning: String,
     val x: Float,
