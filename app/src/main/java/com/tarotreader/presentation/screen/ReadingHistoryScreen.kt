@@ -229,7 +229,15 @@ fun ReadingHistoryScreen(navController: NavController) {
                                 ) {
                                     Button(
                                         onClick = { 
-                                            // In a real implementation, we would share the reading
+                                            // Share reading using Android's share intent
+                                               val shareText = "Tarot Reading:\n\n${reading.interpretation}\n\nNotes: $noteText"
+                                               val sendIntent = android.content.Intent().apply {
+                                                   action = android.content.Intent.ACTION_SEND
+                                                   putExtra(android.content.Intent.EXTRA_TEXT, shareText)
+                                                   type = "text/plain"
+                                               }
+                                               val shareIntent = android.content.Intent.createChooser(sendIntent, "Share Reading")
+                                               context.startActivity(shareIntent)
                                         },
                                         enabled = noteText.isNotEmpty()
                                     ) {
@@ -239,7 +247,10 @@ fun ReadingHistoryScreen(navController: NavController) {
                                     
                                     Button(
                                         onClick = { 
-                                            // In a real implementation, we would save the note
+                                            // Save the note to the reading
+                                               val updatedReading = reading.copy(notes = noteText)
+                                               viewModel.saveReading(updatedReading)
+                                               showNoteDialog = false
                                             expanded = false
                                         },
                                         enabled = noteText.isNotEmpty()

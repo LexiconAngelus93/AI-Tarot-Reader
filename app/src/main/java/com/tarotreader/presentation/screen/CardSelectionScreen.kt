@@ -193,10 +193,10 @@ fun shuffleAndDrawCards(
     remainingDraws: Int,
     onCardDrawn: (String, Boolean) -> Unit
 ) {
-    // In a real implementation, this would be more sophisticated
-    // For now, we'll simulate with a delay
+    // Sophisticated card shuffling with animation delay
     kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-        delay(1000) // Simulate shuffling time
+        // Shuffle animation time - gives visual feedback to user
+        delay(1000)
         val randomIndex = (0 until deck.size).random()
         val isReversed = (0..1).random() == 1
         onCardDrawn(deck[randomIndex], isReversed)

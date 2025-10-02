@@ -111,7 +111,7 @@ fun ReadingResultScreen(navController: NavController, viewModel: TarotViewModel)
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Card image would go here in a real implementation
+                            // Card image placeholder - in production, load from cardImageUrl using Coil
                             Box(
                                 modifier = Modifier
                                     .size(80.dp)
@@ -160,7 +160,8 @@ fun ReadingResultScreen(navController: NavController, viewModel: TarotViewModel)
         ) {
             Button(
                 onClick = { 
-                    // In a real implementation, we would save the reading here
+                    // Save the reading to database via ViewModel
+                    reading?.let { viewModel.saveReading(it) }
                     reading?.let { viewModel.saveReading(it) }
                     isSaved = true
                 },

@@ -4,7 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.util.Log
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -15,20 +20,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.tarotreader.presentation.viewmodel.TarotViewModel
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.util.concurrent.Executors
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @Composable
-fun CameraScreen(navController: NavController) {
+fun CameraScreen(
+    navController: NavController,
+    viewModel: TarotViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
     
     var hasPermission by remember { mutableStateOf(false) }
     var isProcessing by remember { mutableStateOf(false) }
     var cameraError by remember { mutableStateOf<String?>(null) }
+    var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
+    var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
     
     // Check for camera permission
     LaunchedEffect(Unit) {
@@ -57,37 +74,56 @@ fun CameraScreen(navController: NavController) {
         )
         
         if (hasPermission) {
-            // Camera preview would go here in a real implementation
+            // Real CameraX preview implementation
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Camera,
-                            contentDescription = "Camera Preview",
-                            modifier = Modifier.size(64.dp)
-                        )
-                        Text(
-                            text = "Camera Preview",
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                        Text(
-                            text = "Point your camera at your Tarot spread",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    }
-                }
+                AndroidView(
+                    factory = { ctx ->
+                        val previewView = PreviewView(ctx)
+                        val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
+                        
+                        cameraProviderFuture.addListener({
+                            try {
+                                val provider = cameraProviderFuture.get()
+                                cameraProvider = provider
+                                
+                                // Set up preview
+                                val preview = Preview.Builder().build().also {
+                                    it.setSurfaceProvider(previewView.surfaceProvider)
+                                }
+                                
+                                // Set up image capture
+                                imageCapture = ImageCapture.Builder()
+                                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                                    .build()
+                                
+                                // Select back camera
+                                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                                
+                                // Unbind all use cases before rebinding
+                                provider.unbindAll()
+                                
+                                // Bind use cases to camera
+                                provider.bindToLifecycle(
+                                    lifecycleOwner,
+                                    cameraSelector,
+                                    preview,
+                                    imageCapture
+                                )
+                            } catch (e: Exception) {
+                                Log.e("CameraScreen", "Camera initialization failed", e)
+                                cameraError = "Failed to initialize camera: ${e.message}"
+                            }
+                        }, ContextCompat.getMainExecutor(ctx))
+                        
+                        previewView
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         } else {
             // Permission request UI
@@ -139,64 +175,188 @@ fun CameraScreen(navController: NavController) {
             if (hasPermission) {
                 Button(
                     onClick = { 
-                        isProcessing = true
-                        // Simulate image processing
-                        processImage(context) { success ->
-                            isProcessing = false
-                            if (success) {
-                                navController.navigate(Screen.ReadingResult.route)
-                            } else {
-                                cameraError = "Failed to process image. Please try again."
+                        scope.launch {
+                            isProcessing = true
+                            cameraError = null
+                            
+                            try {
+                                val bitmap = captureImage(context, imageCapture)
+                                if (bitmap != null) {
+                                    // Process the captured image
+                                    processImage(context, bitmap, viewModel) { success ->
+                                        isProcessing = false
+                                        if (success) {
+                                            navController.navigate(Screen.ReadingResult.route)
+                                        } else {
+                                            cameraError = "Failed to process image. Please try again."
+                                        }
+                                    }
+                                } else {
+                                    isProcessing = false
+                                    cameraError = "Failed to capture image. Please try again."
+                                }
+                            } catch (e: Exception) {
+                                isProcessing = false
+                                cameraError = "Error: ${e.message}"
+                                Log.e("CameraScreen", "Capture failed", e)
                             }
                         }
                     },
-                    enabled = !isProcessing
+                    enabled = !isProcessing && imageCapture != null
                 ) {
                     if (isProcessing) {
-                        Icon(Icons.Default.Sync, contentDescription = "Processing")
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text("Processing...")
                     } else {
                         Icon(Icons.Default.PhotoCamera, contentDescription = "Capture")
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text("Capture")
                     }
                 }
             } else {
                 Button(
                     onClick = { 
-                        // In a real app, we would request permission here
-                        // For now, we'll just simulate granting permission
+                        // Request camera permission
+                        // Note: In a real app, you would use ActivityResultContracts
+                        // For this implementation, we'll simulate permission grant
                         hasPermission = true
                     }
                 ) {
                     Icon(Icons.Default.Key, contentDescription = "Grant Permission")
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text("Grant Permission")
                 }
             }
             
-            Button(onClick = { navController.navigate(Screen.Home.route) }) {
+            Button(onClick = { 
+                cameraProvider?.unbindAll()
+                navController.navigate(Screen.Home.route) 
+            }) {
                 Icon(Icons.Default.Cancel, contentDescription = "Cancel")
+                Spacer(modifier = Modifier.width(8.dp))
                 Text("Cancel")
             }
         }
     }
+    
+    DisposableEffect(Unit) {
+        onDispose {
+            cameraProvider?.unbindAll()
+        }
+    }
 }
 
-fun processImage(context: Context, onResult: (Boolean) -> Unit) {
-    // This is where we would implement actual image processing
-    // For now, we'll just log that processing would happen and simulate success
-    
-    Log.d("CameraScreen", "Processing image for card detection and spread analysis")
-    
-    // In a real implementation, this would:
-    // 1. Capture image from camera
-    // 2. Save image to temporary file
-    // 3. Use TensorFlow Lite model to detect cards
-    // 4. Identify card positions in the spread
-    // 5. Generate interpretation based on detected cards
-    
-    // Simulate processing delay
-    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-        kotlinx.coroutines.delay(2000)
-        onResult(true) // Simulate success
+/**
+ * Capture image from camera using CameraX ImageCapture
+ */
+suspend fun captureImage(context: Context, imageCapture: ImageCapture?): Bitmap? {
+    return suspendCoroutine { continuation ->
+        if (imageCapture == null) {
+            continuation.resume(null)
+            return@suspendCoroutine
+        }
+        
+        val photoFile = File(
+            context.cacheDir,
+            "tarot_spread_${System.currentTimeMillis()}.jpg"
+        )
+        
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        
+        imageCapture.takePicture(
+            outputOptions,
+            Executors.newSingleThreadExecutor(),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    try {
+                        val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
+                        
+                        // Rotate bitmap if needed based on EXIF data
+                        val rotatedBitmap = rotateBitmapIfNeeded(bitmap, photoFile.absolutePath)
+                        
+                        // Clean up temp file
+                        photoFile.delete()
+                        
+                        continuation.resume(rotatedBitmap)
+                    } catch (e: Exception) {
+                        Log.e("CameraScreen", "Failed to load captured image", e)
+                        continuation.resume(null)
+                    }
+                }
+                
+                override fun onError(exception: ImageCaptureException) {
+                    Log.e("CameraScreen", "Image capture failed", exception)
+                    continuation.resume(null)
+                }
+            }
+        )
+    }
+}
+
+/**
+ * Rotate bitmap based on EXIF orientation data
+ */
+fun rotateBitmapIfNeeded(bitmap: Bitmap, imagePath: String): Bitmap {
+    try {
+        val exif = androidx.exifinterface.media.ExifInterface(imagePath)
+        val orientation = exif.getAttributeInt(
+            androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
+            androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL
+        )
+        
+        val matrix = Matrix()
+        when (orientation) {
+            androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            else -> return bitmap
+        }
+        
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    } catch (e: Exception) {
+        Log.e("CameraScreen", "Failed to rotate bitmap", e)
+        return bitmap
+    }
+}
+
+/**
+ * Process captured image using AI card detection and spread analysis
+ */
+fun processImage(
+    context: Context, 
+    bitmap: Bitmap, 
+    viewModel: TarotViewModel,
+    onResult: (Boolean) -> Unit
+) {
+    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        try {
+            Log.d("CameraScreen", "Starting image processing for card detection")
+            
+            // Save bitmap to temporary file for processing
+            val tempFile = File(context.cacheDir, "temp_spread_${System.currentTimeMillis()}.jpg")
+            FileOutputStream(tempFile).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            }
+            
+            // Use ViewModel to analyze the spread from image
+            // This will use TarotCardDetector and SpreadLayoutRecognizer
+            viewModel.analyzeSpreadFromImage(bitmap, "rider_waite") // Default deck
+            
+            // Clean up temp file
+            tempFile.delete()
+            
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                onResult(true)
+            }
+        } catch (e: Exception) {
+            Log.e("CameraScreen", "Image processing failed", e)
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                onResult(false)
+            }
+        }
     }
 }

@@ -114,7 +114,7 @@ fun TarotDictionaryScreen(navController: NavController) {
                 style = MaterialTheme.typography.bodyMedium
             )
             
-            // In a real implementation, this would be a proper dropdown or filter chips
+            // Filter UI - in production, implement with DropdownMenu or FilterChip components
             Button(onClick = { 
                 // Cycle through categories
                 selectedCategory = when (selectedCategory) {

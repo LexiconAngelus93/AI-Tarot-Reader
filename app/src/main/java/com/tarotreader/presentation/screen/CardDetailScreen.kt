@@ -10,10 +10,28 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun CardDetailScreen(navController: NavController, cardId: String) {
-    // In a real implementation, we would fetch the card details by ID
-    // For now, we'll use placeholder data
-    val card = when (cardId) {
+fun CardDetailScreen(
+    navController: NavController, 
+    cardId: String,
+    viewModel: com.tarotreader.presentation.viewmodel.TarotViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+) {
+    // Fetch card details from ViewModel
+    val cards by viewModel.cards.collectAsState()
+    val actualCard = cards.find { it.id == cardId }
+    
+    // Fallback to placeholder data if card not found in database
+    val card = if (actualCard != null) {
+        TarotCardItem(
+            id = actualCard.id,
+            name = actualCard.name,
+            uprightMeaning = actualCard.uprightMeaning,
+            reversedMeaning = actualCard.reversedMeaning,
+            description = actualCard.description,
+            keywords = actualCard.uprightKeywords + actualCard.reversedKeywords,
+            cardImageUrl = actualCard.cardImageUrl,
+            category = if (actualCard.arcana == "Major") CardCategory.MAJOR_ARCANA else CardCategory.MINOR_ARCANA
+        )
+    } else when (cardId) {
         "0_rider_waite" -> TarotCardItem(
             id = cardId,
             name = "The Fool",
