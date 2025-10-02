@@ -5,9 +5,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 
 @Composable
 fun CardDetailScreen(
@@ -114,12 +116,12 @@ fun CardDetailScreen(
                 .padding(bottom = 16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
-            Box(
+            AsyncImage(
+                model = card.cardImageUrl,
+                contentDescription = card.name,
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Card Image Placeholder")
-            }
+                contentScale = ContentScale.Fit
+            )
         }
         
         // Card meanings

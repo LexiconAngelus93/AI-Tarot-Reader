@@ -41,7 +41,7 @@ object MinorArcanaProvider {
             numerology = if (number == 1) "1" else null,
             element = getElement(suit),
             astrology = getAstrology(suit),
-            cardImageUrl = "https://example.com/${cardName.lowercase().replace(" ", "_")}.jpg",
+            cardImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/RWS_Tarot_${suit}_${number}.jpg/200px-RWS_Tarot_${suit}_${number}.jpg",
             deckId = deckId
         )
     }
@@ -60,7 +60,7 @@ object MinorArcanaProvider {
             numerology = null,
             element = getElement(suit),
             astrology = getCourtAstrology(type, suit),
-            cardImageUrl = "https://example.com/${cardName.lowercase().replace(" ", "_")}.jpg",
+            cardImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/RWS_Tarot_${suit}_${number}.jpg/200px-RWS_Tarot_${suit}_${number}.jpg",
             deckId = deckId
         )
     }

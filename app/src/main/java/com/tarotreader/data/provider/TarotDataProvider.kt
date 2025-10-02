@@ -329,7 +329,7 @@ object TarotDataProvider {
             name = "Celtic Cross",
             description = "The most popular ten-card spread, offering comprehensive insight into any situation. Covers past, present, future, and various aspects of the querent's life.",
             positions = positions,
-            imageUrl = "https://example.com/celtic-cross-spread.jpg",
+            imageUrl = "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&h=300&fit=crop",
             isCustom = false
         )
     }
@@ -346,7 +346,7 @@ object TarotDataProvider {
             name = "Three Card Spread",
             description = "A simple yet powerful spread representing the past, present, and future. Perfect for gaining insight into a situation's progression.",
             positions = positions,
-            imageUrl = "https://example.com/three-card-spread.jpg",
+            imageUrl = "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=400&h=300&fit=crop",
             isCustom = false
         )
     }
@@ -367,7 +367,7 @@ object TarotDataProvider {
             name = "Horseshoe Spread",
             description = "A seven-card spread that provides insight into the querent's current situation and possible outcomes. Cards are laid out in a horseshoe shape.",
             positions = positions,
-            imageUrl = "https://example.com/horseshoe-spread.jpg",
+            imageUrl = "https://images.unsplash.com/photo-1509043759401-136742328bb3?w=400&h=300&fit=crop",
             isCustom = false
         )
     }
@@ -382,7 +382,7 @@ object TarotDataProvider {
             name = "Daily Draw",
             description = "A single card draw for daily guidance and insight. Simple but effective for quick spiritual direction.",
             positions = positions,
-            imageUrl = "https://example.com/daily-draw-spread.jpg",
+            imageUrl = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&h=300&fit=crop",
             isCustom = false
         )
     }

@@ -77,7 +77,9 @@ fun SpreadCreatorScreen(navController: NavController) {
                     Text("Drag positions onto the canvas to create your spread")
                 } else {
                     // Canvas for spread creation - positions can be added and arranged
-                    // In production, implement drag-and-drop with Canvas API
+                    // Note: Drag-and-drop functionality can be implemented using Jetpack Compose's
+                    // drag gesture modifiers (Modifier.pointerInput) combined with Canvas API
+                    // for custom drawing. This would allow users to visually arrange card positions.
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

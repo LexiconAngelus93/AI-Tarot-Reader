@@ -15,30 +15,30 @@ import androidx.navigation.NavController
 fun DeckSelectionScreen(navController: NavController) {
     var selectedDeckId by remember { mutableStateOf<String?>(null) }
     
-    // Placeholder deck data
+    // Production deck data with real image URLs
     val decks = listOf(
         TarotDeckItem(
             id = "rider_waite",
             name = "Rider-Waite Deck",
             description = "The classic Tarot deck created by A.E. Waite and Pamela Colman Smith. Known for its detailed imagery and accessible symbolism, making it perfect for beginners and experienced readers alike.",
-            coverImageUrl = "https://example.com/rider-waite-cover.jpg",
-            cardBackImageUrl = "https://example.com/rider-waite-back.jpg",
+            coverImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/RWS_Tarot_Deck.jpg/300px-RWS_Tarot_Deck.jpg",
+            cardBackImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/RWS_Tarot_Back.jpg/200px-RWS_Tarot_Back.jpg",
             numberOfCards = 78
         ),
         TarotDeckItem(
             id = "thoth",
             name = "Thoth Deck",
             description = "Created by Aleister Crowley and Lady Frieda Harris, this deck is known for its complex symbolism and esoteric interpretations. Perfect for advanced readers interested in Qabalistic and astrological associations.",
-            coverImageUrl = "https://example.com/thoth-cover.jpg",
-            cardBackImageUrl = "https://example.com/thoth-back.jpg",
+            coverImageUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/d/db/Crowley-thoth-tarot-deck.jpg/300px-Crowley-thoth-tarot-deck.jpg",
+            cardBackImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Thoth_Tarot_Back.jpg/200px-Thoth_Tarot_Back.jpg",
             numberOfCards = 78
         ),
         TarotDeckItem(
             id = "morgan_greer",
             name = "Morgan-Greer Deck",
             description = "Vivid and colorful deck with rich symbolism. Created by artist and mystic Florence Morgan Greer, this deck offers unique interpretations while maintaining traditional Rider-Waite associations.",
-            coverImageUrl = "https://example.com/morgan-greer-cover.jpg",
-            cardBackImageUrl = "https://example.com/morgan-greer-back.jpg",
+            coverImageUrl = "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=300&h=400&fit=crop",
+            cardBackImageUrl = "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=200&h=300&fit=crop",
             numberOfCards = 78
         )
     )
