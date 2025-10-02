@@ -1,9 +1,17 @@
 package com.tarotreader.data.database
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "readings")
+@Entity(
+    tableName = "readings",
+    indices = [
+        Index(value = ["deckId"]),
+        Index(value = ["spreadId"]),
+        Index(value = ["date"])
+    ]
+)
 data class ReadingEntity(
     @PrimaryKey
     val id: String,

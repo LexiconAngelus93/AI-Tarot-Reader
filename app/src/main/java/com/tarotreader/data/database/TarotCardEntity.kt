@@ -1,9 +1,18 @@
 package com.tarotreader.data.database
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tarot_cards")
+@Entity(
+    tableName = "tarot_cards",
+    indices = [
+        Index(value = ["deckId"]),
+        Index(value = ["arcana"]),
+        Index(value = ["suit"]),
+        Index(value = ["name"])
+    ]
+)
 data class TarotCardEntity(
     @PrimaryKey
     val id: String,
