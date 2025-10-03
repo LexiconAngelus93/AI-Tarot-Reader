@@ -1,23 +1,20 @@
 buildscript {
-    ext.kotlin_version = '1.9.20'
-    ext.compose_version = '1.5.4'
+    ext.kotlin_version = '2.2.20'
+    ext.compose_version = '1.10.0-alpha04'
+    ext.ksp_version = '2.2.20-1.0.29'
     
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath 'com.android.tools.build:gradle:8.13.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.4.0'
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
+        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.57.2'
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:$ksp_version"
     }
 }
 
