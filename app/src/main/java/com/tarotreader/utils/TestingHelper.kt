@@ -60,7 +60,7 @@ object TestingHelper {
         // Navigate to camera screen
         testRule.onNodeWithText("AI-Powered Spread Analysis").performClick()
         
-        // Grant permission (simulated)
+        // Grant permission (using Accompanist permission system)
         testRule.onNodeWithText("Grant Permission").performClick()
         
         // Capture image

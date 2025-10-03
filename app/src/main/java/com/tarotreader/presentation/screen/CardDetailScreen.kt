@@ -5,15 +5,35 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 
 @Composable
-fun CardDetailScreen(navController: NavController, cardId: String) {
-    // In a real implementation, we would fetch the card details by ID
-    // For now, we'll use placeholder data
-    val card = when (cardId) {
+fun CardDetailScreen(
+    navController: NavController, 
+    cardId: String,
+    viewModel: com.tarotreader.presentation.viewmodel.TarotViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+) {
+    // Fetch card details from ViewModel
+    val cards by viewModel.cards.collectAsState()
+    val actualCard = cards.find { it.id == cardId }
+    
+    // Fallback to placeholder data if card not found in database
+    val card = if (actualCard != null) {
+        TarotCardItem(
+            id = actualCard.id,
+            name = actualCard.name,
+            uprightMeaning = actualCard.uprightMeaning,
+            reversedMeaning = actualCard.reversedMeaning,
+            description = actualCard.description,
+            keywords = actualCard.uprightKeywords + actualCard.reversedKeywords,
+            cardImageUrl = actualCard.cardImageUrl,
+            category = if (actualCard.arcana == "Major") CardCategory.MAJOR_ARCANA else CardCategory.MINOR_ARCANA
+        )
+    } else when (cardId) {
         "0_rider_waite" -> TarotCardItem(
             id = cardId,
             name = "The Fool",
@@ -96,12 +116,12 @@ fun CardDetailScreen(navController: NavController, cardId: String) {
                 .padding(bottom = 16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
-            Box(
+            AsyncImage(
+                model = card.cardImageUrl,
+                contentDescription = card.name,
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Card Image Placeholder")
-            }
+                contentScale = ContentScale.Fit
+            )
         }
         
         // Card meanings
@@ -174,7 +194,10 @@ fun CardDetailScreen(navController: NavController, cardId: String) {
                 FlowRow {
                     card.keywords.forEach { keyword ->
                         Chip(
-                            onClick = { /* TODO: Implement keyword filtering */ },
+                            onClick = { 
+                                // Navigate to dictionary with keyword filter
+                                navController.navigate("dictionary?keyword=${keyword}")
+                            },
                             label = { Text(keyword) },
                             modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
                         )

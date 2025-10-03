@@ -21,41 +21,24 @@ fun ReadingHistoryScreen(navController: NavController) {
     var dateFilter by remember { mutableStateOf<DateFilter>(DateFilter.AllTime) }
     var expandedFilter by remember { mutableStateOf(false) }
     
-    // Placeholder readings data
-    val readings = listOf(
+    // Fetch reading history from ViewModel
+    val readingHistory by viewModel.readingHistory.collectAsState()
+    
+    // Convert to ReadingEntry format for display
+    val readings = readingHistory.map { reading ->
         ReadingEntry(
-            id = "1",
-            date = Date(),
-            deckName = "Rider-Waite Deck",
-            spreadName = "Celtic Cross",
-            eigenvalue = 0.75,
-            cardCount = 10
-        ),
-        ReadingEntry(
-            id = "2",
-            date = Date(System.currentTimeMillis() - 86400000), // Yesterday
-            deckName = "Morgan-Greer Deck",
-            spreadName = "Three Card Spread",
-            eigenvalue = 0.42,
-            cardCount = 3
-        ),
-        ReadingEntry(
-            id = "3",
-            date = Date(System.currentTimeMillis() - 172800000), // Two days ago
-            deckName = "Rider-Waite Deck",
-            spreadName = "Daily Draw",
-            eigenvalue = 0.88,
-            cardCount = 1
-        ),
-        ReadingEntry(
-            id = "4",
-            date = Date(System.currentTimeMillis() - 259200000), // Three days ago
-            deckName = "Thoth Deck",
-            spreadName = "Horseshoe Spread",
-            eigenvalue = 0.65,
-            cardCount = 7
+            id = reading.id,
+            date = Date(reading.timestamp),
+            deckName = reading.deckId.replace("_", " ").split(" ").joinToString(" ") { 
+                it.replaceFirstChar { char -> char.uppercase() } 
+            },
+            spreadName = reading.spreadType.name.replace("_", " ").split(" ").joinToString(" ") { 
+                it.replaceFirstChar { char -> char.uppercase() } 
+            },
+            eigenvalue = reading.eigenvalue,
+            cardCount = reading.cards.size
         )
-    )
+    }
     
     val filteredReadings = readings.filter { reading ->
         (searchQuery.isEmpty() || 
@@ -229,7 +212,15 @@ fun ReadingHistoryScreen(navController: NavController) {
                                 ) {
                                     Button(
                                         onClick = { 
-                                            // In a real implementation, we would share the reading
+                                            // Share reading using Android's share intent
+                                               val shareText = "Tarot Reading:\n\n${reading.interpretation}\n\nNotes: $noteText"
+                                               val sendIntent = android.content.Intent().apply {
+                                                   action = android.content.Intent.ACTION_SEND
+                                                   putExtra(android.content.Intent.EXTRA_TEXT, shareText)
+                                                   type = "text/plain"
+                                               }
+                                               val shareIntent = android.content.Intent.createChooser(sendIntent, "Share Reading")
+                                               context.startActivity(shareIntent)
                                         },
                                         enabled = noteText.isNotEmpty()
                                     ) {
@@ -239,7 +230,10 @@ fun ReadingHistoryScreen(navController: NavController) {
                                     
                                     Button(
                                         onClick = { 
-                                            // In a real implementation, we would save the note
+                                            // Save the note to the reading
+                                               val updatedReading = reading.copy(notes = noteText)
+                                               viewModel.saveReading(updatedReading)
+                                               showNoteDialog = false
                                             expanded = false
                                         },
                                         enabled = noteText.isNotEmpty()

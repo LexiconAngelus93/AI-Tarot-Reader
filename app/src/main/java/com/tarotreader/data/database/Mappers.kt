@@ -1,42 +1,50 @@
 package com.tarotreader.data.database
 
-import com.tarotreader.data.model.*
+import com.tarotreader.domain.model.*
+
+// Extension functions to convert between domain and entity models
 
 // TarotCard mappers
-fun TarotCard.toTarotCardEntity(): TarotCardEntity {
+fun TarotCard.toEntity(): TarotCardEntity {
     return TarotCardEntity(
         id = this.id,
         name = this.name,
         uprightMeaning = this.uprightMeaning,
         reversedMeaning = this.reversedMeaning,
         description = this.description,
-        keywords = this.keywords.joinToString(","),
+        uprightKeywords = this.uprightKeywords.joinToString(","),
+        reversedKeywords = this.reversedKeywords.joinToString(","),
         numerology = this.numerology,
         element = this.element,
         astrology = this.astrology,
         cardImageUrl = this.cardImageUrl,
-        deckId = this.deckId
+        deckId = this.deckId,
+        arcana = this.arcana,
+        suit = this.suit
     )
 }
 
-fun TarotCardEntity.toTarotCard(): TarotCard {
+fun TarotCardEntity.toDomain(): TarotCard {
     return TarotCard(
         id = this.id,
         name = this.name,
         uprightMeaning = this.uprightMeaning,
         reversedMeaning = this.reversedMeaning,
         description = this.description,
-        keywords = this.keywords.split(",").filter { it.isNotEmpty() },
+        uprightKeywords = this.uprightKeywords.split(",").filter { it.isNotEmpty() },
+        reversedKeywords = this.reversedKeywords.split(",").filter { it.isNotEmpty() },
         numerology = this.numerology,
         element = this.element,
         astrology = this.astrology,
         cardImageUrl = this.cardImageUrl,
-        deckId = this.deckId
+        deckId = this.deckId,
+        arcana = this.arcana,
+        suit = this.suit
     )
 }
 
 // TarotDeck mappers
-fun TarotDeck.toTarotDeckEntity(): TarotDeckEntity {
+fun TarotDeck.toEntity(): TarotDeckEntity {
     return TarotDeckEntity(
         id = this.id,
         name = this.name,
@@ -44,11 +52,12 @@ fun TarotDeck.toTarotDeckEntity(): TarotDeckEntity {
         coverImageUrl = this.coverImageUrl,
         cardBackImageUrl = this.cardBackImageUrl,
         numberOfCards = this.numberOfCards,
-        deckType = this.deckType.name
+        author = this.author,
+        publisher = this.publisher
     )
 }
 
-fun TarotDeckEntity.toTarotDeck(): TarotDeck {
+fun TarotDeckEntity.toDomain(): TarotDeck {
     return TarotDeck(
         id = this.id,
         name = this.name,
@@ -56,38 +65,40 @@ fun TarotDeckEntity.toTarotDeck(): TarotDeck {
         coverImageUrl = this.coverImageUrl,
         cardBackImageUrl = this.cardBackImageUrl,
         numberOfCards = this.numberOfCards,
-        deckType = DeckType.valueOf(this.deckType)
+        author = this.author,
+        publisher = this.publisher
     )
 }
 
 // TarotSpread mappers
-fun TarotSpread.toTarotSpreadEntity(): TarotSpreadEntity {
+fun TarotSpread.toEntity(): TarotSpreadEntity {
     return TarotSpreadEntity(
         id = this.id,
         name = this.name,
         description = this.description,
         imageUrl = this.imageUrl,
-        isCustom = this.isCustom
+        isCustom = this.isCustom,
+        numberOfPositions = this.positions.size
     )
 }
 
-fun TarotSpreadEntity.toTarotSpread(): TarotSpread {
+fun TarotSpreadEntity.toDomain(positions: List<SpreadPosition>): TarotSpread {
     return TarotSpread(
         id = this.id,
         name = this.name,
         description = this.description,
-        positions = emptyList(), // Positions will be loaded separately
+        positions = positions,
         imageUrl = this.imageUrl,
         isCustom = this.isCustom
     )
 }
 
 // SpreadPosition mappers
-fun SpreadPosition.toSpreadPositionEntity(): SpreadPositionEntity {
+fun SpreadPosition.toEntity(spreadId: String): SpreadPositionEntity {
     return SpreadPositionEntity(
         id = this.id,
-        spreadId = this.spreadId,
-        positionIndex = this.positionIndex,
+        spreadId = spreadId,
+        positionOrder = this.positionOrder,
         name = this.name,
         meaning = this.meaning,
         x = this.x,
@@ -95,11 +106,10 @@ fun SpreadPosition.toSpreadPositionEntity(): SpreadPositionEntity {
     )
 }
 
-fun SpreadPositionEntity.toSpreadPosition(): SpreadPosition {
+fun SpreadPositionEntity.toDomain(): SpreadPosition {
     return SpreadPosition(
         id = this.id,
-        spreadId = this.spreadId,
-        positionIndex = this.positionIndex,
+        positionOrder = this.positionOrder,
         name = this.name,
         meaning = this.meaning,
         x = this.x,
@@ -108,25 +118,25 @@ fun SpreadPositionEntity.toSpreadPosition(): SpreadPosition {
 }
 
 // Reading mappers
-fun Reading.toReadingEntity(): ReadingEntity {
+fun Reading.toEntity(): ReadingEntity {
     return ReadingEntity(
         id = this.id,
         deckId = this.deckId,
         spreadId = this.spreadId,
-        date = this.date,
+        date = this.date.time,
         interpretation = this.interpretation,
         eigenvalue = this.eigenvalue,
         notes = this.notes
     )
 }
 
-fun ReadingEntity.toReading(): Reading {
+fun ReadingEntity.toDomain(cardDrawings: List<CardDrawing>): Reading {
     return Reading(
         id = this.id,
         deckId = this.deckId,
         spreadId = this.spreadId,
-        date = this.date,
-        cardDrawings = emptyList(), // Card drawings will be loaded separately
+        date = java.util.Date(this.date),
+        cardDrawings = cardDrawings,
         interpretation = this.interpretation,
         eigenvalue = this.eigenvalue,
         notes = this.notes
@@ -134,7 +144,7 @@ fun ReadingEntity.toReading(): Reading {
 }
 
 // CardDrawing mappers
-fun CardDrawing.toCardDrawingEntity(readingId: String): CardDrawingEntity {
+fun CardDrawing.toEntity(readingId: String): CardDrawingEntity {
     return CardDrawingEntity(
         id = "${readingId}_${this.cardId}_${this.positionId}",
         readingId = readingId,
@@ -144,7 +154,7 @@ fun CardDrawing.toCardDrawingEntity(readingId: String): CardDrawingEntity {
     )
 }
 
-fun CardDrawingEntity.toCardDrawing(): CardDrawing {
+fun CardDrawingEntity.toDomain(): CardDrawing {
     return CardDrawing(
         cardId = this.cardId,
         positionId = this.positionId,

@@ -9,11 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tarotreader.presentation.viewmodel.TarotViewModel
 import androidx.compose.animation.*
+import coil.compose.AsyncImage
 
 @Composable
 fun ReadingResultScreen(navController: NavController, viewModel: TarotViewModel) {
@@ -111,19 +113,23 @@ fun ReadingResultScreen(navController: NavController, viewModel: TarotViewModel)
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Card image would go here in a real implementation
-                            Box(
-                                modifier = Modifier
-                                    .size(80.dp)
-                                    .padding(end = 16.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("Card\nImage")
-                            }
+                            // Card image with Coil
+                               Card(
+                                   modifier = Modifier
+                                       .size(80.dp)
+                                       .padding(end = 16.dp)
+                               ) {
+                                   AsyncImage(
+                                       model = cardDrawing.card.cardImageUrl,
+                                       contentDescription = cardDrawing.card.name,
+                                       modifier = Modifier.fillMaxSize(),
+                                       contentScale = ContentScale.Crop
+                                   )
+                               }
                             
                             Column {
                                 Text(
-                                    text = "Card Placeholder",
+                                    text = cardDrawing.card.name,
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -160,7 +166,8 @@ fun ReadingResultScreen(navController: NavController, viewModel: TarotViewModel)
         ) {
             Button(
                 onClick = { 
-                    // In a real implementation, we would save the reading here
+                    // Save the reading to database via ViewModel
+                    reading?.let { viewModel.saveReading(it) }
                     reading?.let { viewModel.saveReading(it) }
                     isSaved = true
                 },

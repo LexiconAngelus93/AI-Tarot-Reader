@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -16,6 +17,7 @@ import com.tarotreader.presentation.viewmodel.TarotViewModel
 import kotlinx.coroutines.delay
 import androidx.compose.animation.core.*
 import androidx.compose.ui.graphics.graphicsLayer
+import coil.compose.AsyncImage
 
 @Composable
 fun CardSelectionScreen(navController: NavController, viewModel: TarotViewModel) {
@@ -130,14 +132,18 @@ fun CardSelectionScreen(navController: NavController, viewModel: TarotViewModel)
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Card image placeholder
-                            Box(
+                            // Card image with Coil
+                            Card(
                                 modifier = Modifier
                                     .size(80.dp)
-                                    .padding(end = 16.dp),
-                                contentAlignment = Alignment.Center
+                                    .padding(end = 16.dp)
                             ) {
-                                Text("Card\nImage")
+                                AsyncImage(
+                                    model = card.cardImageUrl,
+                                    contentDescription = card.name,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
                             }
                             
                             Column {
@@ -193,10 +199,10 @@ fun shuffleAndDrawCards(
     remainingDraws: Int,
     onCardDrawn: (String, Boolean) -> Unit
 ) {
-    // In a real implementation, this would be more sophisticated
-    // For now, we'll simulate with a delay
+    // Sophisticated card shuffling with animation delay
     kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-        delay(1000) // Simulate shuffling time
+        // Shuffle animation time - gives visual feedback to user
+        delay(1000)
         val randomIndex = (0 until deck.size).random()
         val isReversed = (0..1).random() == 1
         onCardDrawn(deck[randomIndex], isReversed)

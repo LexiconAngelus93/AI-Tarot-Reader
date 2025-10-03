@@ -1,34 +1,62 @@
 package com.tarotreader.domain.usecase
 
+import com.tarotreader.data.ai.GeminiAIService
 import com.tarotreader.domain.model.CardDrawing
 import com.tarotreader.domain.model.Reading
 import com.tarotreader.domain.model.TarotCard
-import com.tarotreader.domain.model.TarotDeck
-import com.tarotreader.domain.model.TarotSpread
 import com.tarotreader.domain.repository.TarotRepository
+import kotlinx.coroutines.flow.first
 import java.util.*
+import javax.inject.Inject
 
-class GenerateReadingUseCase(
-    private val repository: TarotRepository
+class GenerateReadingUseCase @Inject constructor(
+    private val repository: TarotRepository,
+    private val geminiAIService: GeminiAIService,
+    private val calculateEigenvalueUseCase: CalculateEigenvalueUseCase
 ) {
     suspend operator fun invoke(
         deckId: String,
         spreadId: String,
-        cardDrawings: List<CardDrawing>
+        cardDrawings: List<CardDrawing>,
+        question: String? = null
     ): Reading {
         // Fetch deck and spread information
         val deck = repository.getDeckById(deckId)
         val spread = repository.getSpreadById(spreadId)
         
-        // Generate interpretation based on cards and positions
-        val interpretation = if (deck != null && spread != null) {
-            generateInterpretation(cardDrawings, deck, spread)
-        } else {
-            generatePlaceholderInterpretation(cardDrawings)
+        if (deck == null || spread == null) {
+            throw IllegalArgumentException("Invalid deck or spread ID")
+        }
+        
+        // Get all cards for the reading
+        val allCards = repository.getCardsByDeck(deckId).first()
+        val readingCards = cardDrawings.mapNotNull { drawing ->
+            allCards.find { it.id == drawing.cardId }
+        }
+        
+        // Generate AI-powered interpretation
+        val interpretation = try {
+            if (geminiAIService.isConfigured()) {
+                geminiAIService.generateReadingInterpretation(
+                    cards = readingCards,
+                    cardDrawings = cardDrawings,
+                    positions = spread.positions,
+                    spreadName = spread.name,
+                    question = question
+                )
+            } else {
+                generateFallbackInterpretation(readingCards, cardDrawings, spread.positions)
+            }
+        } catch (e: Exception) {
+            generateFallbackInterpretation(readingCards, cardDrawings, spread.positions)
         }
         
         // Calculate eigenvalue
-        val eigenvalue = calculateEigenvalue(cardDrawings)
+        val eigenvalue = calculateEigenvalueUseCase(
+            cardDrawings = cardDrawings,
+            cards = readingCards,
+            positions = spread.positions
+        )
         
         return Reading(
             id = UUID.randomUUID().toString(),
@@ -42,48 +70,45 @@ class GenerateReadingUseCase(
         )
     }
     
-    private suspend fun generateInterpretation(
+    /**
+     * Fallback interpretation when AI is unavailable
+     */
+    private fun generateFallbackInterpretation(
+        cards: List<TarotCard>,
         cardDrawings: List<CardDrawing>,
-        deck: TarotDeck,
-        spread: TarotSpread
+        positions: List<com.tarotreader.domain.model.SpreadPosition>
     ): String {
         val interpretations = mutableListOf<String>()
         
-        // Get all cards for the deck
-        val allCards = repository.getCardsByDeck(deck.id)
-        
-        cardDrawings.forEach { drawing ->
-            val card = allCards.find { it.id == drawing.cardId }
-            val position = spread.positions.find { it.id == drawing.positionId }
+        cardDrawings.forEachIndexed { index, drawing ->
+            val card = cards.find { it.id == drawing.cardId }
+            val position = positions.find { it.id == drawing.positionId }
             
             if (card != null && position != null) {
-                val cardInterpretation = if (drawing.isReversed) {
-                    card.reversedMeaning
-                } else {
-                    card.uprightMeaning
-                }
+                val orientation = if (drawing.isReversed) "Reversed" else "Upright"
+                val meaning = if (drawing.isReversed) card.reversedMeaning else card.uprightMeaning
+                val keywords = if (drawing.isReversed) card.reversedKeywords else card.uprightKeywords
                 
-                interpretations.add("${position.name}: ${card.name} (${cardInterpretation})")
+                interpretations.add("""
+                    **${position.name}**: ${card.name} ($orientation)
+                    
+                    ${position.meaning}
+                    
+                    $meaning
+                    
+                    Key themes: ${keywords.joinToString(", ")}
+                """.trimIndent())
             }
         }
         
-        return "Reading for ${deck.name} using ${spread.name}:\n\n" +
-                interpretations.joinToString("\n\n") +
-                "\n\nOverall interpretation: This reading suggests a journey of self-discovery and spiritual growth. " +
-                "The cards indicate that you should trust your intuition and embrace change as it comes. " +
-                "Your current situation is influenced by past experiences, but the future holds promise for new beginnings."
-    }
-    
-    private fun generatePlaceholderInterpretation(cardDrawings: List<CardDrawing>): String {
-        return "This is a placeholder interpretation based on your card draws. " +
-                "In a real implementation, this would be generated by analyzing the meanings of the drawn cards " +
-                "in relation to their positions in the spread. The interpretation would provide insights into " +
-                "your situation, offering guidance and perspective based on the wisdom of the Tarot."
-    }
-    
-    private fun calculateEigenvalue(cardDrawings: List<CardDrawing>): Double {
-        // In a real implementation, this would use our EigenvalueCalculator
-        // For now, we'll return a random value between 0 and 1
-        return (0..100).random() / 100.0
+        return """
+            # Your Tarot Reading
+            
+            ${interpretations.joinToString("\n\n---\n\n")}
+            
+            ## Overall Guidance
+            
+            This reading reveals the energies and influences surrounding your current situation. Each card offers unique insights and guidance. Reflect on how these messages resonate with your life and what actions you might take moving forward. Remember, the Tarot is a tool for self-reflection and empowerment - the future is not fixed, and you have the power to shape your path.
+        """.trimIndent()
     }
 }

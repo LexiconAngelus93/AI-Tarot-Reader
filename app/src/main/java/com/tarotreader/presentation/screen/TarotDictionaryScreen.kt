@@ -11,9 +11,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 
 @Composable
 fun TarotDictionaryScreen(navController: NavController) {
@@ -114,7 +116,7 @@ fun TarotDictionaryScreen(navController: NavController) {
                 style = MaterialTheme.typography.bodyMedium
             )
             
-            // In a real implementation, this would be a proper dropdown or filter chips
+            // Filter UI - in production, implement with DropdownMenu or FilterChip components
             Button(onClick = { 
                 // Cycle through categories
                 selectedCategory = when (selectedCategory) {
@@ -158,15 +160,19 @@ fun TarotDictionaryScreen(navController: NavController) {
                             .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Card image placeholder
-                        Box(
-                            modifier = Modifier
-                                .size(100.dp)
-                                .padding(bottom = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("Card\nImage")
-                        }
+                        // Card image with Coil
+                           Card(
+                               modifier = Modifier
+                                   .size(100.dp)
+                                   .padding(bottom = 8.dp)
+                           ) {
+                               AsyncImage(
+                                   model = card.cardImageUrl,
+                                   contentDescription = card.name,
+                                   modifier = Modifier.fillMaxSize(),
+                                   contentScale = ContentScale.Crop
+                               )
+                           }
                         
                         Text(
                             text = card.name,

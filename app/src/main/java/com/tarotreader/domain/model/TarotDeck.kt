@@ -7,11 +7,6 @@ data class TarotDeck(
     val coverImageUrl: String,
     val cardBackImageUrl: String,
     val numberOfCards: Int,
-    val deckType: DeckType
+    val author: String?,
+    val publisher: String?
 )
-
-enum class DeckType {
-    MAJOR_ARCANA_ONLY,
-    FULL_DECK,
-    CUSTOM
-}

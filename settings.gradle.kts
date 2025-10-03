@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "TarotReader"
-include ':app'
+include(":app")

@@ -10,5 +10,6 @@ data class TarotSpreadEntity(
     val name: String,
     val description: String,
     val imageUrl: String?,
-    val isCustom: Boolean
+    val isCustom: Boolean,
+    val numberOfPositions: Int
 )
