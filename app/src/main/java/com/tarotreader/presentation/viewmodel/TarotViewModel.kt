@@ -6,12 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.tarotreader.domain.model.CardDrawing
 import com.tarotreader.domain.usecase.*
 import com.tarotreader.utils.PerformanceOptimizer
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TarotViewModel(
+@HiltViewModel
+class TarotViewModel @Inject constructor(
     private val getAllDecksUseCase: GetAllDecksUseCase,
     private val getDeckByIdUseCase: GetDeckByIdUseCase,
     private val getAllSpreadsUseCase: GetAllSpreadsUseCase,

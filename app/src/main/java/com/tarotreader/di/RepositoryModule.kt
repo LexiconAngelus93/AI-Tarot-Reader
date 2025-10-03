@@ -4,22 +4,31 @@ import com.tarotreader.data.database.TarotDao
 import com.tarotreader.data.repository.FirebaseTarotRepository
 import com.tarotreader.data.repository.TarotRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
 object RepositoryModule {
-    private var localRepository: TarotRepository? = null
-    private var firebaseRepository: FirebaseTarotRepository? = null
     
-    fun provideLocalRepository(dao: TarotDao): TarotRepository {
-        if (localRepository == null) {
-            localRepository = TarotRepository(dao)
-        }
-        return localRepository!!
+    @Provides
+    @Singleton
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
     }
     
+    @Provides
+    @Singleton
+    fun provideLocalRepository(dao: TarotDao): TarotRepository {
+        return TarotRepository(dao)
+    }
+    
+    @Provides
+    @Singleton
     fun provideFirebaseRepository(firestore: FirebaseFirestore): FirebaseTarotRepository {
-        if (firebaseRepository == null) {
-            firebaseRepository = FirebaseTarotRepository(firestore)
-        }
-        return firebaseRepository!!
+        return FirebaseTarotRepository(firestore)
     }
 }
